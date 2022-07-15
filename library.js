@@ -1,5 +1,7 @@
 "use strict";
 
+let myLibrary = [];
+
 function Book(title, author, pages, read = false) {
 	this.title = title;
 	this.author = author;
@@ -26,3 +28,11 @@ Book.prototype.shoutOut = function () {
 };
 
 console.log(leviathanWakes.shoutOut());
+
+const addBookToLibrary = function (bookObj) {
+	myLibrary.push(bookObj);
+};
+
+addBookToLibrary(leviathanWakes);
+
+console.log(myLibrary);
