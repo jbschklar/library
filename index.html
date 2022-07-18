@@ -5,8 +5,86 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="style.css" />
-		<script src="/library.js"></script>
+		<script src="/library.js" defer></script>
 		<title>Library</title>
 	</head>
-	<body></body>
+	<body>
+		<div class="card-container">
+			<!-- <div class="book-card sci-fi">
+				<div class="book-title">
+					<h3>Title:</h3>
+					<p>Leviathan Wakes</p>
+				</div>
+				<div class="book-author">
+					<h3>Author:</h3>
+					<p>James S. A. Corey</p>
+				</div>
+				<div class="book-pages">
+					<h3>Pages:</h3>
+					<p>666</p>
+				</div>
+				<div class="book-genre">
+					<h3>Genre:</h3>
+					<p>Scifi</p>
+				</div>
+				<div class="book-progress">
+					<h3>Status:</h3>
+					<p>Read</p>
+				</div>
+			</div> -->
+		</div>
+		<button type="submit" class="book-btn">Add Book</button>
+		<form action="#" method="get" class="book-form hidden">
+			<label for="title">Title</label>
+			<input type="text" name="title" id="title" />
+			<label for="author">Author</label>
+			<input type="text" name="author" id="author" />
+			<label for="pages">Length</label>
+			<input type="text" name="pages" id="pages" placeholder="# of pages" />
+
+			<div class="genre-options">
+				<h3>Genre:</h3>
+				<ul>
+					<li>
+						<input type="radio" name="genre" id="non-fiction" />
+						<label for="non-fiction">Non-fiction/ Reference</label>
+					</li>
+					<li>
+						<input type="radio" name="genre" id="fantasy" />
+						<label for="fantasy">Fantasy</label>
+					</li>
+					<li>
+						<input type="radio" name="genre" id="scifi" />
+						<label for="scifi">Sci-fi</label>
+					</li>
+					<li>
+						<input type="radio" name="genre" id="horror" />
+						<label for="horror">Horror</label>
+					</li>
+					<li>
+						<input type="radio" name="genre" id="mystery-thriller" />
+						<label for="mystery-thriller">Mystery/ Thriller</label>
+					</li>
+				</ul>
+			</div>
+			<div class="read-options">
+				<h3>Have you read it?</h3>
+				<ul>
+					<li>
+						<input type="radio" name="read" id="not-read" />
+						<label for="no">Not read</label>
+					</li>
+					<li>
+						<input type="radio" name="read" id="in-progress" />
+						<label for="in-progress">In progress</label>
+					</li>
+					<li>
+						<input type="radio" name="read" id="read" />
+						<label for="read">Read</label>
+					</li>
+				</ul>
+			</div>
+			<button type="submit" class="form-btn">submit</button>
+		</form>
+	</body>
 </html>

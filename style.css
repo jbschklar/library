@@ -1,0 +1,77 @@
+* {
+	padding: 0;
+	margin: 0;
+	color: #292524;
+	--sci-fi-color: #166534;
+	--fantasy-color: #2563eb;
+	--horror-color: #991b1b;
+	--reference-color: #ea580c;
+	--mystery-color: #4c1d95;
+}
+
+.card-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	/* grid-template-rows: repeat(auuto-fill, minmax(200px, 1fr)); */
+	gap: 15px;
+	/* border: 15px solid sienna; */
+	height: 50vh;
+}
+
+.book-card,
+.book-form {
+	/* grid-column: max(200px, 1fr); */
+	/* width: min(250px); */
+	margin: 15px;
+	padding: 30px;
+	border: 1px solid #292524;
+
+	border-radius: 10px;
+	box-shadow: 0 5px 20px #342f2e;
+}
+
+.book-form {
+	background-color: antiquewhite;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.sci-fi {
+	border-left: 8px solid var(--sci-fi-color);
+}
+
+.fantasy {
+	border-left: 8px solid var(--fantasy-color);
+}
+
+.horror {
+	border-left: 8px solid var(--horror-color);
+}
+
+.non-fiction {
+	border-left: 8px solid var(--reference-color);
+}
+
+.mystery-thriller {
+	border-left: 8px solid var(--mystery-color);
+}
+
+.hidden {
+	opacity: 0;
+}
+
+input {
+	text-transform: capitalize;
+}
+
+.form-btn,
+.book-btn {
+	color: white;
+	padding: 15px 30px;
+	border-radius: 10px;
+	font-size: 1rem;
+	background-color: rgb(20, 20, 109);
+	margin: 30px;
+}
