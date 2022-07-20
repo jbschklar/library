@@ -30,13 +30,8 @@ const reset = function () {
 	});
 };
 
-const removeBook = function (target) {
-	myLibrary.forEach((book) => {
-		if (book === e.target) {
-			myLibrary.splice(myLibrary.indexOf(book));
-		}
-	});
-};
+const updateRead = function () {};
+
 const leviathanWakes = new Book(
 	"Leviathan Wakes",
 	"James S. A. Corey",
@@ -94,8 +89,14 @@ const cardGenerator = function (book) {
     </div>
     <div class="book-progress">
         <h3>Status:</h3>
-        <p>${book.status}</p>
+        <p id="status">${book.status}</p>
     </div>
+    <select name="status" id="status-update" class="update">
+  <option value="read">Read</option>
+  <option value="in-progress">In progress</option>
+  <option value="not-read">Not read</option>
+</select>
+    <button class="update-read">Update Status</button>
     <button class="remove-btn">Remove</button>
 `;
 		cardContainer.appendChild(newCard);
@@ -107,12 +108,15 @@ newBookBtn.addEventListener("click", function (e) {
 });
 
 cardContainer.addEventListener("click", function (e) {
+	const book = e.target.closest(".book-card");
 	if (e.target.classList.contains("remove-btn")) {
-		const book = e.target.closest(".book-card");
 		myLibrary.splice(myLibrary.indexOf(book));
 		cardGenerator(myLibrary);
-		// cardContainer.innerHTML = "";
-		// myLibrary.forEach((book) => cardGenerator(book));
+	}
+	if (e.target.classList.contains("update-read")) {
+		const status = book.querySelector("#status");
+		const update = book.querySelector(".update");
+		status.innerHTML = update.options[update.selectedIndex].text;
 	}
 });
 
@@ -122,7 +126,6 @@ bookForm.addEventListener("submit", function (e) {
 	const newBook = {};
 	inputs.forEach((input) => {
 		if (input.checked) {
-			console.log(input.id);
 			input.name === "genre"
 				? (newBook.genre = input.id)
 				: (newBook.status = capitalize(input.id));
