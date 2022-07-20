@@ -4,6 +4,7 @@ const cardContainer = document.querySelector(".card-container");
 const newBookBtn = document.querySelector(".book-btn");
 const bookForm = document.querySelector(".book-form");
 const inputs = document.querySelectorAll("input");
+let updateClicks = 0;
 let myLibrary = [];
 
 function Book(title, author, pages, genre, status) {
@@ -91,12 +92,13 @@ const cardGenerator = function (book) {
         <h3>Status:</h3>
         <p id="status">${book.status}</p>
     </div>
-    <select name="status" id="status-update" class="update">
+    <button class="update-read">Update Status</button>
+    <select name="status" id="status-update" class="update hidden">
   <option value="read">Read</option>
   <option value="in-progress">In progress</option>
   <option value="not-read">Not read</option>
 </select>
-    <button class="update-read">Update Status</button>
+    
     <button class="remove-btn">Remove</button>
 `;
 		cardContainer.appendChild(newCard);
@@ -116,7 +118,13 @@ cardContainer.addEventListener("click", function (e) {
 	if (e.target.classList.contains("update-read")) {
 		const status = book.querySelector("#status");
 		const update = book.querySelector(".update");
-		status.innerHTML = update.options[update.selectedIndex].text;
+		update.classList.remove("hidden");
+		updateClicks++;
+		if (updateClicks > 1) {
+			status.innerHTML = update.options[update.selectedIndex].text;
+			updateClicks = 0;
+			update.classList.add("hidden");
+		}
 	}
 });
 
