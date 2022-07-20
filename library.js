@@ -4,7 +4,6 @@ const cardContainer = document.querySelector(".card-container");
 const newBookBtn = document.querySelector(".book-btn");
 const bookForm = document.querySelector(".book-form");
 const inputs = document.querySelectorAll("input");
-const removeBtn = document.querySelector(".remove-btn");
 let myLibrary = [];
 
 function Book(title, author, pages, genre, status) {
@@ -70,33 +69,37 @@ addBookToLibrary(calibansWar);
 console.log(myLibrary);
 
 // add a new card to the page with all the book info gathered from form
-const cardGenerator = function (bookObj) {
-	const newCard = document.createElement("div");
-	newCard.classList.add("book-card", `${bookObj.genre}`);
+const cardGenerator = function (book) {
+	cardContainer.innerHTML = "";
+	myLibrary.forEach((book) => {
+		const newCard = document.createElement("div");
+		newCard.classList.add("book-card", `${book.genre}`);
 
-	newCard.innerHTML = `<div class="book-title">
-    <h3>Title:</h3>
-    <p>${bookObj.title}</p>
-</div>
-<div class="book-author">
-    <h3>Author:</h3>
-    <p>${bookObj.author}</p>
-</div>
-<div class="book-pages">
-    <h3>Pages:</h3>
-    <p>${bookObj.pages}</p>
-</div>
-<div class="book-genre">
-    <h3>Genre:</h3>
-    <p>${capitalize(bookObj.genre)}</p>
-</div>
-<div class="book-progress">
-    <h3>Status:</h3>
-    <p>${bookObj.status}</p>
-</div>
-<button class="remove-btn">Remove</button>
+		newCard.innerHTML = `
+    <div class="book-title">
+        <h3>Title:</h3>
+        <p>${book.title}</p>
+    </div>
+    <div class="book-author">
+        <h3>Author:</h3>
+        <p>${book.author}</p>
+    </div>
+    <div class="book-pages">
+        <h3>Pages:</h3>
+        <p>${book.pages}</p>
+    </div>
+    <div class="book-genre">
+        <h3>Genre:</h3>
+        <p>${capitalize(book.genre)}</p>
+    </div>
+    <div class="book-progress">
+        <h3>Status:</h3>
+        <p>${book.status}</p>
+    </div>
+    <button class="remove-btn">Remove</button>
 `;
-	cardContainer.appendChild(newCard);
+		cardContainer.appendChild(newCard);
+	});
 };
 
 newBookBtn.addEventListener("click", function (e) {
@@ -104,13 +107,18 @@ newBookBtn.addEventListener("click", function (e) {
 });
 
 cardContainer.addEventListener("click", function (e) {
-	console.log(e.target);
-	// removeBook();
+	if (e.target.classList.contains("remove-btn")) {
+		const book = e.target.closest(".book-card");
+		myLibrary.splice(myLibrary.indexOf(book));
+		cardGenerator(myLibrary);
+		// cardContainer.innerHTML = "";
+		// myLibrary.forEach((book) => cardGenerator(book));
+	}
 });
 
 bookForm.addEventListener("submit", function (e) {
 	e.preventDefault();
-	cardContainer.innerHTML = "";
+
 	const newBook = {};
 	inputs.forEach((input) => {
 		if (input.checked) {
@@ -127,9 +135,8 @@ bookForm.addEventListener("submit", function (e) {
 		}
 	});
 	newBook.prototype = Object.create(Book.prototype);
-	console.log(newBook);
 	myLibrary.push(newBook);
 	bookForm.classList.add("hidden");
-	myLibrary.forEach((book) => cardGenerator(book));
+	cardGenerator(myLibrary);
 	reset();
 });
