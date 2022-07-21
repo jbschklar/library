@@ -4,7 +4,11 @@ const cardContainer = document.querySelector(".card-container");
 const newBookBtn = document.querySelector(".book-btn");
 const bookForm = document.querySelector(".book-form");
 const inputs = document.querySelectorAll("input");
-let updateClicks = 0;
+// For status update event listener
+let bookStatus;
+let update;
+let updateSelect;
+
 let myLibrary = [];
 
 function Book(title, author, pages, genre, status) {
@@ -63,8 +67,6 @@ const addBookToLibrary = function (bookObj) {
 addBookToLibrary(leviathanWakes);
 addBookToLibrary(calibansWar);
 
-console.log(myLibrary);
-
 // add a new card to the page with all the book info gathered from form
 const cardGenerator = function (book) {
 	cardContainer.innerHTML = "";
@@ -111,38 +113,33 @@ const cardGenerator = function (book) {
 
 newBookBtn.addEventListener("click", function (e) {
 	bookForm.classList.remove("hidden");
-	console.log("working");
 });
 
 cardContainer.addEventListener("click", function (e) {
 	const book = e.target.closest(".book-card");
 	const position = +book.dataset.position;
-	// console.log(position);
+
 	if (e.target.classList.contains("remove-btn")) {
 		myLibrary.splice(myLibrary.indexOf(book));
 		cardGenerator(myLibrary);
 	}
 	if (e.target.classList.contains("update-read")) {
-		const status = book.querySelector("#status");
-		const update = book.querySelector(".update");
-		const updateSelect = book.querySelector(".update-select");
+		bookStatus = book.querySelector("#status");
+		update = book.querySelector(".update");
+		updateSelect = book.querySelector(".update-select");
 		update.classList.remove("hidden");
-		updateClicks++;
-		if (e.target.classList.contains("update-submit")) {
-			// put this in another eventlistener?
-			const newStatus = updateSelect.options[updateSelect.selectedIndex].text;
-			status.innerHTML = newStatus;
-			myLibrary.forEach((obj) => {
-				console.log(obj.position, position);
-				if (obj.position === position) {
-					obj.status = newStatus;
-					console.log(obj.status);
-				}
-			});
-			// console.log(book.status);
-			updateClicks = 0;
-			// update.classList.add("hidden");
-		}
+	}
+	if (e.target.classList.contains("update-submit")) {
+		// put this in another eventlistener or make first listener variables global and updated in first listener to use below?
+		const newStatus = updateSelect.options[updateSelect.selectedIndex].text;
+		bookStatus.innerHTML = newStatus;
+		myLibrary.forEach((obj) => {
+			if (obj.position === position) {
+				obj.status = newStatus;
+			}
+		});
+
+		update.classList.add("hidden");
 	}
 });
 
