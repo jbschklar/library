@@ -13,6 +13,7 @@ function Book(title, author, pages, genre, status) {
 	this.pages = pages;
 	this.genre = genre;
 	this.status = status;
+	this.position = "";
 }
 
 const capitalize = function (str) {
@@ -70,6 +71,7 @@ const cardGenerator = function (book) {
 	myLibrary.forEach((book) => {
 		const newCard = document.createElement("div");
 		newCard.classList.add("book-card", `${book.genre}`);
+		newCard.dataset.position = book.position;
 
 		newCard.innerHTML = `
     <div class="book-title">
@@ -90,15 +92,17 @@ const cardGenerator = function (book) {
     </div>
     <div class="book-progress">
         <h3>Status:</h3>
-        <p id="status">${book.status}</p>
+        <p id="status">${capitalize(book.status)}</p>
     </div>
     <button class="update-read">Update Status</button>
-    <select name="status" id="status-update" class="update hidden">
-  <option value="read">Read</option>
-  <option value="in-progress">In progress</option>
-  <option value="not-read">Not read</option>
-</select>
-    
+    <div class="update-btn-container update hidden">
+        <select name="status" id="status-update" class="update-select">
+            <option value="read">Read</option>
+            <option value="in-progress">In progress</option>
+            <option value="not-read">Not read</option>
+        </select>
+        <button class="update-submit">Update</button>
+    </div>
     <button class="remove-btn">Remove</button>
 `;
 		cardContainer.appendChild(newCard);
@@ -107,10 +111,13 @@ const cardGenerator = function (book) {
 
 newBookBtn.addEventListener("click", function (e) {
 	bookForm.classList.remove("hidden");
+	console.log("working");
 });
 
 cardContainer.addEventListener("click", function (e) {
 	const book = e.target.closest(".book-card");
+	const position = +book.dataset.position;
+	// console.log(position);
 	if (e.target.classList.contains("remove-btn")) {
 		myLibrary.splice(myLibrary.indexOf(book));
 		cardGenerator(myLibrary);
@@ -118,12 +125,23 @@ cardContainer.addEventListener("click", function (e) {
 	if (e.target.classList.contains("update-read")) {
 		const status = book.querySelector("#status");
 		const update = book.querySelector(".update");
+		const updateSelect = book.querySelector(".update-select");
 		update.classList.remove("hidden");
 		updateClicks++;
-		if (updateClicks > 1) {
-			status.innerHTML = update.options[update.selectedIndex].text;
+		if (e.target.classList.contains("update-submit")) {
+			// put this in another eventlistener?
+			const newStatus = updateSelect.options[updateSelect.selectedIndex].text;
+			status.innerHTML = newStatus;
+			myLibrary.forEach((obj) => {
+				console.log(obj.position, position);
+				if (obj.position === position) {
+					obj.status = newStatus;
+					console.log(obj.status);
+				}
+			});
+			// console.log(book.status);
 			updateClicks = 0;
-			update.classList.add("hidden");
+			// update.classList.add("hidden");
 		}
 	}
 });
@@ -140,13 +158,12 @@ bookForm.addEventListener("submit", function (e) {
 		}
 		if (input.type !== "radio") {
 			const objKey = `${input.name}`;
-			console.log(input.value);
-
 			newBook[objKey] = capitalize(input.value);
 		}
 	});
 	newBook.prototype = Object.create(Book.prototype);
 	myLibrary.push(newBook);
+	newBook.position = myLibrary.indexOf(newBook);
 	bookForm.classList.add("hidden");
 	cardGenerator(myLibrary);
 	reset();

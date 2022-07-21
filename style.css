@@ -7,9 +7,27 @@
 	--horror-color: #991b1b;
 	--reference-color: #ea580c;
 	--mystery-color: #4c1d95;
+	font-family: sans-serif;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+header {
+	background-color: rgb(159, 162, 212);
+	height: 25vh;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .card-container {
+	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	/* grid-template-rows: repeat(auuto-fill, minmax(200px, 1fr)); */
@@ -27,6 +45,10 @@
 
 	border-radius: 10px;
 	box-shadow: 0 5px 20px #342f2e;
+}
+
+.book-card button {
+	margin-top: 15px;
 }
 
 .book-form {
@@ -59,8 +81,9 @@
 
 .hidden {
 	opacity: 0;
-	position: absolute;
-	top: 100%;
+	position: relative;
+	/* bottom: 0;
+	height: 5px; */
 }
 
 input {
@@ -78,4 +101,8 @@ input {
 }
 
 .book-btn {
+}
+
+ul {
+	list-style: none;
 }
