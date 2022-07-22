@@ -3,7 +3,8 @@
 const cardContainer = document.querySelector(".card-container");
 const newBookBtn = document.querySelector(".book-btn");
 const bookForm = document.querySelector(".book-form");
-const inputs = document.querySelectorAll("input");
+const inputs = bookForm.querySelectorAll("input");
+let formError = false;
 // For status update event listener
 let bookStatus;
 let update;
@@ -18,8 +19,13 @@ function Book(title, author, pages, genre, status) {
 	this.genre = genre;
 	this.status = status;
 	this.position = "";
+	// this function allows correlation between the book and it's position in the library array
+	this.getPosition = function () {
+		this.position = myLibrary.indexOf(this);
+	};
 }
 
+// helper function for rendering cards
 const capitalize = function (str) {
 	let newStr = str.split(" ");
 	return newStr
@@ -29,6 +35,7 @@ const capitalize = function (str) {
 		.join(" ");
 };
 
+// to reset form fields after each use
 const reset = function () {
 	inputs.forEach((input) => {
 		input.value = "";
@@ -36,41 +43,15 @@ const reset = function () {
 	});
 };
 
-const updateRead = function () {};
-
-const leviathanWakes = new Book(
-	"Leviathan Wakes",
-	"James S. A. Corey",
-	577,
-	"sci-fi",
-	"read"
-);
-
-const calibansWar = new Book(
-	"Caliban's War",
-	"James S. A. Corey",
-	605,
-	"sci-fi",
-	"read"
-);
-
-Book.prototype.shoutOut = function () {
-	return `I love ${this.title}!`;
-};
-
-console.log(leviathanWakes.shoutOut());
-
+// helper function
 const addBookToLibrary = function (bookObj) {
 	myLibrary.push(bookObj);
 };
 
-addBookToLibrary(leviathanWakes);
-addBookToLibrary(calibansWar);
-
-// add a new card to the page with all the book info gathered from form
-const cardGenerator = function (book) {
+// adds a new card to the page with all the book info gathered from form
+const cardGenerator = function (libraryArr) {
 	cardContainer.innerHTML = "";
-	myLibrary.forEach((book) => {
+	libraryArr.forEach((book) => {
 		const newCard = document.createElement("div");
 		newCard.classList.add("book-card", `${book.genre}`);
 		newCard.dataset.position = book.position;
@@ -103,7 +84,7 @@ const cardGenerator = function (book) {
             <option value="in-progress">In progress</option>
             <option value="not-read">Not read</option>
         </select>
-        <button class="update-submit">Update</button>
+        <button class="update-submit" disabled>Update</button>
     </div>
     <button class="remove-btn">Remove</button>
 `;
@@ -111,43 +92,22 @@ const cardGenerator = function (book) {
 	});
 };
 
+// makes form modal pop up/appear to create new book
 newBookBtn.addEventListener("click", function (e) {
 	bookForm.classList.remove("hidden");
 });
 
-cardContainer.addEventListener("click", function (e) {
-	const book = e.target.closest(".book-card");
-	const position = +book.dataset.position;
-
-	if (e.target.classList.contains("remove-btn")) {
-		myLibrary.splice(myLibrary.indexOf(book));
-		cardGenerator(myLibrary);
-	}
-	if (e.target.classList.contains("update-read")) {
-		bookStatus = book.querySelector("#status");
-		update = book.querySelector(".update");
-		updateSelect = book.querySelector(".update-select");
-		update.classList.remove("hidden");
-	}
-	if (e.target.classList.contains("update-submit")) {
-		// put this in another eventlistener or make first listener variables global and updated in first listener to use below?
-		const newStatus = updateSelect.options[updateSelect.selectedIndex].text;
-		bookStatus.innerHTML = newStatus;
-		myLibrary.forEach((obj) => {
-			if (obj.position === position) {
-				obj.status = newStatus;
-			}
-		});
-
-		update.classList.add("hidden");
-	}
-});
-
+// to creat new book for library using revealed form modal
 bookForm.addEventListener("submit", function (e) {
 	e.preventDefault();
-
-	const newBook = {};
+	formError = false;
+	const newBook = new Book();
 	inputs.forEach((input) => {
+		if (!input.value && input.type !== "radio") {
+			// formError to prevent submition of empty sections
+			formError = true;
+			return;
+		}
 		if (input.checked) {
 			input.name === "genre"
 				? (newBook.genre = input.id)
@@ -158,10 +118,75 @@ bookForm.addEventListener("submit", function (e) {
 			newBook[objKey] = capitalize(input.value);
 		}
 	});
-	newBook.prototype = Object.create(Book.prototype);
+	if (formError) return;
 	myLibrary.push(newBook);
-	newBook.position = myLibrary.indexOf(newBook);
+	newBook.getPosition();
 	bookForm.classList.add("hidden");
 	cardGenerator(myLibrary);
 	reset();
 });
+
+// this event listener handles button clicks on book cards once they're created since they actual buttons only exist in the DOM
+cardContainer.addEventListener("click", function (e) {
+	const book = e.target.closest(".book-card");
+	const position = +book.dataset.position;
+	const updateSubmitBtn = book.querySelector(".update-submit");
+
+	// to remove card from lobrary array and card from UI
+	if (e.target.classList.contains("remove-btn")) {
+		console.log(myLibrary[position]);
+		myLibrary.splice(myLibrary[position].position, 1);
+		// this resets position value to correlate correctly with position in library array after a book is removed
+		myLibrary.forEach((book) => {
+			book.getPosition();
+		});
+		cardGenerator(myLibrary);
+	}
+	// initiate update status by revealing select menu
+	if (e.target.classList.contains("update-read")) {
+		bookStatus = book.querySelector("#status");
+		update = book.querySelector(".update");
+		updateSelect = book.querySelector(".update-select");
+		update.classList.remove("hidden");
+		updateSubmitBtn.removeAttribute("disabled");
+		console.log(updateSubmitBtn.hasAttribute("disabled"));
+	}
+	// to submit once option is selected and then remove from view
+	if (
+		e.target.classList.contains("update-submit") &&
+		!update.classList.contains("hidden")
+	) {
+		const newStatus = updateSelect.options[updateSelect.selectedIndex].text;
+		bookStatus.innerHTML = newStatus;
+		myLibrary.forEach((obj) => {
+			if (obj.position === position) {
+				obj.status = newStatus;
+			}
+		});
+
+		update.classList.add("hidden");
+		updateSubmitBtn.setAttribute("disabled", "");
+	}
+});
+
+// sample books to test functionality
+const leviathanWakes = new Book(
+	"Leviathan Wakes",
+	"James S. A. Corey",
+	577,
+	"sci-fi",
+	"read"
+);
+
+const calibansWar = new Book(
+	"Caliban's War",
+	"James S. A. Corey",
+	605,
+	"sci-fi",
+	"read"
+);
+
+addBookToLibrary(leviathanWakes);
+addBookToLibrary(calibansWar);
+
+cardGenerator(myLibrary);
