@@ -170,23 +170,23 @@ cardContainer.addEventListener("click", function (e) {
 });
 
 // sample books to test functionality
-const leviathanWakes = new Book(
-	"Leviathan Wakes",
-	"James S. A. Corey",
-	577,
-	"sci-fi",
-	"read"
-);
+// const leviathanWakes = new Book(
+// 	"Leviathan Wakes",
+// 	"James S. A. Corey",
+// 	577,
+// 	"sci-fi",
+// 	"read"
+// );
 
-const calibansWar = new Book(
-	"Caliban's War",
-	"James S. A. Corey",
-	605,
-	"sci-fi",
-	"read"
-);
+// const calibansWar = new Book(
+// 	"Caliban's War",
+// 	"James S. A. Corey",
+// 	605,
+// 	"sci-fi",
+// 	"read"
+// );
 
-addBookToLibrary(leviathanWakes);
-addBookToLibrary(calibansWar);
+// addBookToLibrary(leviathanWakes);
+// addBookToLibrary(calibansWar);
 
 cardGenerator(myLibrary);
