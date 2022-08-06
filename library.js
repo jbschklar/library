@@ -12,17 +12,19 @@ let updateSelect;
 
 let myLibrary = [];
 
-function Book(title, author, pages, genre, status) {
-	this.title = title;
-	this.author = author;
-	this.pages = pages;
-	this.genre = genre;
-	this.status = status;
-	this.position = "";
+class Book {
+	constructor(title, author, pages, genre, status) {
+		this.title = title;
+		this.author = author;
+		this.pages = pages;
+		this.genre = genre;
+		this.status = status;
+		this.position = "";
+	}
 	// this function allows correlation between the book and it's position in the library array
-	this.getPosition = function () {
+	getPosition() {
 		this.position = myLibrary.indexOf(this);
-	};
+	}
 }
 
 // helper function for rendering cards
@@ -168,25 +170,5 @@ cardContainer.addEventListener("click", function (e) {
 		updateSubmitBtn.setAttribute("disabled", "");
 	}
 });
-
-// sample books to test functionality
-// const leviathanWakes = new Book(
-// 	"Leviathan Wakes",
-// 	"James S. A. Corey",
-// 	577,
-// 	"sci-fi",
-// 	"read"
-// );
-
-// const calibansWar = new Book(
-// 	"Caliban's War",
-// 	"James S. A. Corey",
-// 	605,
-// 	"sci-fi",
-// 	"read"
-// );
-
-// addBookToLibrary(leviathanWakes);
-// addBookToLibrary(calibansWar);
 
 cardGenerator(myLibrary);
